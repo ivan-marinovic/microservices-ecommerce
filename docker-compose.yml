@@ -1,0 +1,32 @@
+services:
+  mariadb:
+    container_name: mariadb
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    networks:
+      - docker-service
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mariadb
+    ports:
+      - "5004:80"
+    networks:
+      - docker-service
+    depends_on:
+      - mariadb
+
+networks:
+  docker-service:
+    driver: bridge
+
+volumes:
+  maria-data:
+    driver: local
