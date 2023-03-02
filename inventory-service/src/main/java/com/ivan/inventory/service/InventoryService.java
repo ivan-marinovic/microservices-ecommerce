@@ -2,6 +2,7 @@ package com.ivan.inventory.service;
 
 import com.ivan.inventory.dto.InventoryResponse;
 import com.ivan.inventory.repository.InventoryRepository;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

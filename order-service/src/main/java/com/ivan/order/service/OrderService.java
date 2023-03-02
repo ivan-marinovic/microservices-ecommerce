@@ -25,7 +25,7 @@ public class OrderService {
         this.webClientBuilder = webClientBuilder;
     }
 
-    public void placeOrder(List<OrderItems> orderItems) {
+    public String placeOrder(List<OrderItems> orderItems) {
         Order newOrder = new Order();
         newOrder.setOrderNumber(UUID.randomUUID().toString());
         newOrder.setOrderItemsList(orderItems);
@@ -46,6 +46,7 @@ public class OrderService {
 
         if(allProductsInStock) {
             orderRepository.save(newOrder);
+            return "order placed successfully";
         } else {
             throw new OutOfStockException("out of stock");
         }

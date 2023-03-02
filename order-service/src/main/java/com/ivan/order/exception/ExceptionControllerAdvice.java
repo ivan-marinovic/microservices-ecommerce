@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionControllerAdvice {
 
     @ExceptionHandler(value = OutOfStockException.class)
-    public final ResponseEntity<ApiResponse> userDoesNotExistsException(OutOfStockException outOfStockException) {
+    public final ResponseEntity<ApiResponse> outOfStockException(OutOfStockException outOfStockException) {
         return new ResponseEntity<>(new ApiResponse(0, outOfStockException.getMessage()), HttpStatus.NOT_FOUND);
     }
-
 
 }
