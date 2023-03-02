@@ -5,6 +5,8 @@ import com.ivan.order.exception.OutOfStockException;
 import com.ivan.order.model.Order;
 import com.ivan.order.model.OrderItems;
 import com.ivan.order.repository.OrderRepository;
+import org.springframework.cloud.sleuth.Span;
+import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -19,10 +21,12 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
+    private final Tracer tracer;
 
-    public OrderService(OrderRepository orderRepository, WebClient.Builder webClientBuilder) {
+    public OrderService(OrderRepository orderRepository, WebClient.Builder webClientBuilder, Tracer tracer) {
         this.orderRepository = orderRepository;
         this.webClientBuilder = webClientBuilder;
+        this.tracer = tracer;
     }
 
     public String placeOrder(List<OrderItems> orderItems) {
@@ -34,21 +38,28 @@ public class OrderService {
                 .map(OrderItems::getProductId)
                 .toList();
 
-        InventoryResponse[] inventoryResponses = webClientBuilder.build().get()
-                .uri("http://inventory-service/api/v1/inventory",
-                        uriBuilder -> uriBuilder.queryParam("productId", productIds).build())
-                .retrieve()
-                .bodyToMono(InventoryResponse[].class)
-                .block();
+        Span inventoryServiceLookup = tracer.nextSpan().name("InventoryServiceLookup");
 
-        assert inventoryResponses != null;
-        boolean allProductsInStock = Arrays.stream(inventoryResponses).allMatch(InventoryResponse::isInStock);
+        try(Tracer.SpanInScope spanInScope = tracer.withSpan(inventoryServiceLookup.start())){
+            InventoryResponse[] inventoryResponses = webClientBuilder.build().get()
+                    .uri("http://inventory-service/api/v1/inventory",
+                            uriBuilder -> uriBuilder.queryParam("productId", productIds).build())
+                    .retrieve()
+                    .bodyToMono(InventoryResponse[].class)
+                    .block();
 
-        if(allProductsInStock) {
-            orderRepository.save(newOrder);
-            return "order placed successfully";
-        } else {
-            throw new OutOfStockException("out of stock");
+            assert inventoryResponses != null;
+            boolean allProductsInStock = Arrays.stream(inventoryResponses).allMatch(InventoryResponse::isInStock);
+
+            if(allProductsInStock) {
+                orderRepository.save(newOrder);
+                return "order placed successfully";
+            } else {
+                throw new OutOfStockException("out of stock");
+            }
+
+        } finally {
+            inventoryServiceLookup.end();
         }
 
     }
