@@ -1,12 +1,14 @@
 package com.ivan.order.service;
 
 import com.ivan.order.dto.InventoryResponse;
+import com.ivan.order.event.OrderPlacedEvent;
 import com.ivan.order.exception.OutOfStockException;
 import com.ivan.order.model.Order;
 import com.ivan.order.model.OrderItems;
 import com.ivan.order.repository.OrderRepository;
 import org.springframework.cloud.sleuth.Span;
 import org.springframework.cloud.sleuth.Tracer;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,11 +24,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
     private final Tracer tracer;
+    private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
-    public OrderService(OrderRepository orderRepository, WebClient.Builder webClientBuilder, Tracer tracer) {
+    public OrderService(OrderRepository orderRepository, WebClient.Builder webClientBuilder, Tracer tracer, KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate) {
         this.orderRepository = orderRepository;
         this.webClientBuilder = webClientBuilder;
         this.tracer = tracer;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public String placeOrder(List<OrderItems> orderItems) {
@@ -53,6 +57,7 @@ public class OrderService {
 
             if(allProductsInStock) {
                 orderRepository.save(newOrder);
+                kafkaTemplate.send("notificationTopic", new OrderPlacedEvent(newOrder.getOrderNumber()));
                 return "order placed successfully";
             } else {
                 throw new OutOfStockException("out of stock");
