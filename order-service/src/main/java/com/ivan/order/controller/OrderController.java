@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -32,7 +33,7 @@ public class OrderController {
     @CircuitBreaker(name = "inventory", fallbackMethod = "fallbackMethod")
     @TimeLimiter(name = "inventory")
     @Retry(name = "inventory")
-    public CompletableFuture<ResponseEntity<ApiResponse>> placeOrder(@RequestBody OrderRequest orderRequest) {
+    public CompletableFuture<ResponseEntity<ApiResponse>> placeOrder(@Valid @RequestBody OrderRequest orderRequest) {
         return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(new ApiResponse(1, orderService.placeOrder(orderPresentationService.convertToModelList(orderRequest))), HttpStatus.CREATED));
     }
 

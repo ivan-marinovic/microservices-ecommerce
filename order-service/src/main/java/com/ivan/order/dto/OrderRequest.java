@@ -1,8 +1,10 @@
 package com.ivan.order.dto;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 public class OrderRequest {
+    @NotEmpty
     private List<OrderItemsDto> orderItemsDtoList;
 
     public OrderRequest() {
