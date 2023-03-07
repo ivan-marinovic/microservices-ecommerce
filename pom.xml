@@ -23,7 +23,6 @@
         <module>api-gateway</module>
         <module>notification-service</module>
         <module>user-service</module>
-        <module>authenticate-service</module>
     </modules>
 
     <properties>
