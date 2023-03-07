@@ -38,6 +38,6 @@ public class OrderController {
     }
 
     public CompletableFuture<ResponseEntity<ApiResponse>> fallbackMethod(OrderRequest orderRequest, RuntimeException runtimeException) {
-        return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(new ApiResponse(0, "Something went wrong, please try again later"), HttpStatus.GATEWAY_TIMEOUT));
+        return CompletableFuture.supplyAsync(() -> new ResponseEntity<>(new ApiResponse(0, "Something went wrong, please try again later"), HttpStatus.BAD_REQUEST));
     }
 }
