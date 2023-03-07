@@ -24,9 +24,8 @@ public class RequestFilter implements GatewayFilter {
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.AUTHORIZATION, authorizationHeader);
 
-        //TODO: change this port to auth-service with eureka server
         ResponseEntity<Boolean> response = restTemplate.exchange(
-                "http://localhost:51065/api/v1/auth",
+                "http://localhost:8080/api/v1/auth",
                 HttpMethod.GET,
                 new HttpEntity<>(headers),
                 Boolean.class);
