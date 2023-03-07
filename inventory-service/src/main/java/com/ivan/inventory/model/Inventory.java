@@ -1,6 +1,8 @@
 package com.ivan.inventory.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "inventory")
@@ -8,7 +10,9 @@ public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotEmpty
     private Integer productId;
+    @PositiveOrZero
     private Integer quantity;
 
     public Inventory() {
