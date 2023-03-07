@@ -2,10 +2,16 @@ package com.ivan.product.dto;
 
 import lombok.Builder;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.PositiveOrZero;
+
 @Builder
 public class ProductRequest {
+    @NotEmpty
     private String name;
+    @NotEmpty
     private String description;
+    @PositiveOrZero
     private Float price;
 
     public ProductRequest() {

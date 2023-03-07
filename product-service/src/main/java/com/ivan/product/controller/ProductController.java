@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,7 +32,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<ApiResponse> createProduct(@Valid @RequestBody ProductRequest productRequest) {
         productService.createProduct(productPresentationService.convertToModel(productRequest));
         return new ResponseEntity<>(new ApiResponse(1, "product successfully created"), HttpStatus.CREATED);
     }

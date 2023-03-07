@@ -3,6 +3,8 @@ package com.ivan.product.model;
 import lombok.Builder;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "product")
@@ -11,8 +13,11 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @NotEmpty
     private String name;
+    @NotEmpty
     private String description;
+    @PositiveOrZero
     private Float price;
 
     public Product() {
