@@ -1,9 +1,14 @@
 package com.ivan.user.dto;
 
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
 public class LoginDto {
 
+    @Email
     private String email;
+    @NotEmpty
     private String password;
 
     public LoginDto(String email, String password) {

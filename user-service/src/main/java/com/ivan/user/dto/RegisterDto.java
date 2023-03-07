@@ -2,12 +2,18 @@ package com.ivan.user.dto;
 
 import lombok.Builder;
 
+import javax.validation.constraints.NotEmpty;
+
 @Builder
 public class RegisterDto {
     private Integer userId;
+    @NotEmpty
     private String fullName;
+    @NotEmpty
     private String email;
+    @NotEmpty
     private String password;
+    @NotEmpty
     private String role;
 
     public RegisterDto() {

@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthController {
@@ -38,14 +40,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse> registerUser(@RequestBody RegisterDto registerDto) {
+    public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody RegisterDto registerDto) {
         User user = userPresentationService.convertToModel(registerDto);
         userService.registerUser(user);
         return new ResponseEntity<>(new ApiResponse(1, "user created successfully"), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public String authenticateAndGetToken(@RequestBody LoginDto loginDto) {
+    public String authenticateAndGetToken(@Valid @RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
         User user = userPresentationService.convertLoginDtoToModel(loginDto);
         if (authentication.isAuthenticated()) {

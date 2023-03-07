@@ -3,6 +3,8 @@ package com.ivan.user.model;
 import lombok.Builder;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 @Builder
 @Entity
@@ -11,9 +13,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId;
+    @NotEmpty
     private String fullName;
+    @Email
     private String email;
+    @NotEmpty
     private String password;
+    @NotEmpty
     private String role;
 
     public User() {

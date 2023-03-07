@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -31,7 +32,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<ApiResponse> updateUser(@PathVariable("userId") Integer userId, @RequestBody RegisterDto registerDto) {
+    public ResponseEntity<ApiResponse> updateUser(@PathVariable("userId") Integer userId, @Valid @RequestBody RegisterDto registerDto) {
         User user = userPresentationService.convertToModel(registerDto);
         userService.updateUser(user, userId);
         return new ResponseEntity<>(new ApiResponse(1, "user updated successfully"), HttpStatus.OK);
