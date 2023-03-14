@@ -4,7 +4,7 @@ import com.ivan.user.dto.RegisterDto;
 import com.ivan.user.model.User;
 import com.ivan.user.response.ApiResponse;
 import com.ivan.user.service.UserService;
-import com.ivan.user.service.presentation.UserPresentationService;
+import com.ivan.user.service.UserPresentationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.ivan.user.service.presentation;
+package com.ivan.user.service;
 
 import com.ivan.user.dto.LoginDto;
 import com.ivan.user.dto.RegisterDto;
